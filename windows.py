@@ -47,7 +47,7 @@ class GUI:
         self.text_frame = ttk.Frame(self.mainframe, relief="sunken", padding=5)
         self.text_frame.grid(column=1, row=3)
         self.content_text = ttk.Label(self.text_frame, wraplength=250,
-                                      text="Here goes your main Website content.\n"
+                                      text="Here goes your main Website content.\n\n"
                                            "For better results, it is highly encouraged to write your content "
                                            "externally and copy the written text in an 'Editor'-File (.txt). "
                                            "Then place the file in the same folder as this program and write the "
@@ -61,4 +61,23 @@ class GUI:
         self.submit_button.grid(column=int(self.mainframe.grid_size()[0]/2), row=self.mainframe.grid_size()[1]+1)
 
     def invoke_scripts(self):
-        create_html(self.title_entry.get(), self.headline_entry.get(), self.content_entry.get())
+        try:
+            create_html("en", self.title_entry.get(), headline=self.headline_entry.get(),
+                        content=self.content_entry.get())
+        except ValueError:
+            WarningWindow(0)
+
+
+class WarningWindow:
+    def __init__(self, what):
+        root = tkinter.Tk()
+        root.geometry("300x75+600+400")
+        root.title("Error")
+
+        if what == 0:
+            label = ttk.Label(root, text="You need to choose a language and title.", padding=5)
+            label.pack()
+
+        button = ttk.Button(root, text="OK", command=root.destroy, padding=5)
+        button.pack()
+
