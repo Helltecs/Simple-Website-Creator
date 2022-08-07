@@ -14,20 +14,20 @@ def create_html(lang, title, css=False, headline="", content=""):
 
     with open("index.html", mode="w", encoding="UTF-8") as file:
         file.write(
-                    '<!DOCTYPE html>\n\n'
-                    f'<html lang="{lang}">\n'
-                    '<head>\n'
-                    '<meta charset="utf-8" />\n'
-                    f'<title>{title}</title>\n'
-                    )
+            '<!DOCTYPE html>\n\n'
+            f'<html lang="{lang}">\n'
+            '<head>\n'
+            '<meta charset="utf-8" />\n'
+            f'<title>{title}</title>\n'
+        )
         file.mode = "a"
         if css:
             file.write('<link rel="stylesheet" href=index.css>\n')
 
         file.write(
-                    '</head>\n'
-                    '<body>\n'
-                    )
+            '</head>\n'
+            '<body>\n'
+        )
 
         if headline != "" and not None:
             file.write(f'<h1>{headline}</h1>\n')
@@ -36,10 +36,15 @@ def create_html(lang, title, css=False, headline="", content=""):
             file.write(f'<p>{content}</p>\n')
 
         file.write(
-                    '</body>\n'
-                    '</html>\n'
-                    )
+            '</body>\n'
+            '</html>\n'
+        )
         file.close()
+
 
 def create_css():
     pass
+
+
+def cut_lang(lang: str):
+    return lang[-2::]

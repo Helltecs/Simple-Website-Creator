@@ -131,3 +131,5 @@ dmypy.json
 testHTML.html
 /index.html
 /example.txt
+/test.py
+/index.css
