@@ -1,5 +1,6 @@
 import tkinter
 from tkinter import ttk
+from tkinter import colorchooser as cc
 from scripts import *
 
 
@@ -65,7 +66,7 @@ class GUI:
 
         self.submit_button = ttk.Button(self.mainframe, text="Submit",
                                         command=self.invoke_scripts)
-        self.submit_button.grid(column=int(self.mainframe.grid_size()[0]/2), row=self.mainframe.grid_size()[1]+1)
+        self.submit_button.grid(column=int(self.mainframe.grid_size()[0] / 2), row=self.mainframe.grid_size()[1] + 1)
 
     def invoke_scripts(self):
         if self.YesNo_variable.get():
@@ -104,16 +105,40 @@ class CSSWindow:
 
         self.headline_frame = ttk.LabelFrame(self.mainframe, text="Configure your Headline:", padding=5)
         self.headline_frame.grid(column=0, row=2, columnspan=2)
-        self.headline_align = tkinter.StringVar()
+        self.headline_align = tkinter.IntVar()
+        self.headline_align.set(1)
+        self.headline_align_str = "center"
         self.headline_left = ttk.Radiobutton(self.headline_frame, text="Left", variable=self.headline_align,
-                                             value="left")
+                                             value=0, command=lambda: self.get_headline_align("left"))
         self.headline_left.grid(column=0, row=0)
         self.headline_center = ttk.Radiobutton(self.headline_frame, text="Center", variable=self.headline_align,
-                                               value="center")
+                                               value=1, command=lambda: self.get_headline_align("center"))
         self.headline_center.grid(column=1, row=0)
         self.headline_right = ttk.Radiobutton(self.headline_frame, text="Right", variable=self.headline_align,
-                                               value="right")
+                                              value=2, command=lambda: self.get_headline_align("right"))
         self.headline_right.grid(column=2, row=0)
+
+        self.color = ""
+        self.headline_colorchooser = ttk.Button(self.headline_frame, text="Color of the headline",
+                                                command=self.choose_color)
+        self.headline_colorchooser.grid(column=3, row=0)
+        self.color_display = tkinter.Canvas(self.headline_frame, background="white", height=20, width=20,
+                                            relief="sunken", borderwidth=3)
+        self.color_display.grid(column=4, row=0)
+
+        self.submit_button = ttk.Button(self.mainframe, text="Submit",
+                                        command=self.invoke_scripts)
+        self.submit_button.grid(column=int(self.mainframe.grid_size()[0] / 2), row=self.mainframe.grid_size()[1] + 1)
+
+    def invoke_scripts(self):
+        create_css(headline_align=self.headline_align_str, headline_color=self.color)
+
+    def get_headline_align(self, align):
+        self.headline_align_str = align
+
+    def choose_color(self):
+        self.color = cc.askcolor()[1]
+        self.color_display.configure(background=self.color)
 
 
 class WarningWindow:
@@ -128,4 +153,3 @@ class WarningWindow:
 
         button = ttk.Button(root, text="OK", command=root.destroy, padding=5)
         button.pack()
-

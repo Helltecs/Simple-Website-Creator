@@ -42,8 +42,22 @@ def create_html(lang, title, css=False, headline="", content=""):
         file.close()
 
 
-def create_css():
-    pass
+def create_css(headline_align="", headline_color=""):
+    with open("index.css", mode="w", encoding="UTF-8") as file:
+        file.write("")
+        file.mode = "a"
+        temp = css_section("h1", {"text-align: ": headline_align, "color: ": headline_color})
+        file.write(f"{temp}\n\n")
+        temp = css_section("p", {})
+        file.write(f"{temp}\n\n")
+        file.close()
+
+
+def css_section(section, arguments: {}):
+    return_string = f"{section} " + "{\n"
+    for i in arguments:
+        return_string += i + arguments[i] + ";\n"
+    return return_string + "}"
 
 
 def cut_lang(lang: str):
