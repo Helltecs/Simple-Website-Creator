@@ -6,6 +6,7 @@ from scripts import *
 
 class GUI:
     def __init__(self, root):
+        self.pages = []
         self.root = root
 
         self.root.geometry("600x600+500+300")
@@ -25,8 +26,8 @@ class GUI:
                                    relief="solid", anchor="center", padding=5)
         self.gui_title.grid(column=0, row=0, sticky="new", pady=10, padx=10, columnspan=3)
         self.gui_title.grid_anchor("center")
-        self.placeholder = ttk.Label(self.mainframe, text="Placeholder, delete text and background", background="red")
-        self.placeholder.grid(column=0, row=1, columnspan=3, pady=5, sticky="n")
+        self.placeholder = ttk.Label(self.mainframe)
+        self.placeholder.grid(column=0, row=1, columnspan=3, pady=5, sticky="wne")
 
         self.lang_frame = ttk.LabelFrame(self.mainframe, text="What language does your Website has?", padding=5)
         self.lang_frame.grid(column=0, row=2, pady=10, padx=10)
@@ -47,14 +48,22 @@ class GUI:
         self.title_entry = ttk.Entry(self.title_labelframe, width=40)
         self.title_entry.grid()
 
-        self.headline_labelframe = ttk.LabelFrame(self.mainframe, text="The Headline for your Website:", padding=5)
+        self.headline_labelframe = ttk.LabelFrame(self.mainframe, text="The headline for your Website:", padding=5)
         self.headline_labelframe.grid(column=1, row=3)
         self.headline_entry = ttk.Entry(self.headline_labelframe, width=40)
         self.headline_entry.grid()
 
+        self.nav_frame = ttk.LabelFrame(self.mainframe, text="How many sub-pages should your website have?", padding=5)
+        self.nav_frame.grid(column=0, row=4)
+        self.nav_amount = ttk.Spinbox(self.nav_frame, from_=0, increment=1, to=10, state="readonly",
+                                      command=self.name_pages)
+        self.nav_amount.grid()
+        self.nav_label = ttk.Label(self.nav_frame, text="Name your pages:")
+        self.nav_label.grid(column=0, row=1, rowspan=11, sticky="ns")
+
         self.text_frame = ttk.LabelFrame(self.mainframe, text="Here goes your main Website content.", relief="sunken",
                                          padding=5)
-        self.text_frame.grid(column=0, row=4)
+        self.text_frame.grid(column=1, row=4)
         self.content_text = ttk.Label(self.text_frame, wraplength=250,
                                       text="For better results, it is highly encouraged to write your content "
                                            "externally and copy the written text in an 'Editor'-File (.txt). "
@@ -77,6 +86,16 @@ class GUI:
                         content=self.content_entry.get())
         except ValueError:
             WarningWindow(0)
+
+    def name_pages(self):
+        amount = self.nav_amount.get()
+        if len(self.pages) > 0:
+            for i in self.pages:
+                i.destroy()
+            self.pages = []
+        for n in range(0, int(amount)):
+            self.pages.append(ttk.Entry(self.nav_frame))
+            self.pages[n].grid(column=1, row=1+n, pady=3)
 
 
 class CSSWindow:
