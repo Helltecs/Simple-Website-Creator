@@ -1,4 +1,4 @@
-def create_html(lang, title, css=False, headline="", content=""):
+def create_html(lang, title, css=False, sub_pages=[], headline="", content=""):
     if lang == "" or lang is None:
         raise ValueError("You have to assign a language")
 
@@ -28,6 +28,12 @@ def create_html(lang, title, css=False, headline="", content=""):
             '</head>\n'
             '<body>\n'
         )
+
+        if sub_pages != [] and not None:
+            file.write(f"<nav>\n<ul>\n<li><a href=index.html>{title}</a></li>\n")
+            for i in sub_pages:
+                file.write(f"<li><a href={i}.html>{i}</a></li>\n")
+            file.write("</ul>\n</nav>\n")
 
         if headline != "" and not None:
             file.write(f'<h1>{headline}</h1>\n')

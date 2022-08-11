@@ -57,7 +57,7 @@ class GUI:
         self.nav_frame.grid(column=0, row=4)
         self.nav_amount = ttk.Spinbox(self.nav_frame, from_=0, increment=1, to=10, state="readonly",
                                       command=self.name_pages)
-        self.nav_amount.grid()
+        self.nav_amount.grid(column=0, row=0, columnspan=2)
         self.nav_label = ttk.Label(self.nav_frame, text="Name your pages:")
         self.nav_label.grid(column=0, row=1, rowspan=11, sticky="ns")
 
@@ -78,12 +78,18 @@ class GUI:
         self.submit_button.grid(column=int(self.mainframe.grid_size()[0] / 2), row=self.mainframe.grid_size()[1] + 1)
 
     def invoke_scripts(self):
+        pages_names = []
+        for i in self.pages:
+            pages_names.append(i.get())
         if self.YesNo_variable.get():
             CSSWindow()
+        if self.pages != [] and not None:
+            SubPagesWindow(self.root, pages_names)
         try:
-            create_html(cut_lang(self.lang_selector.get()), self.title_entry.get(), css=self.YesNo_variable.get(),
-                        headline=self.headline_entry.get(),
+            create_html(cut_lang(self.lang_selector.get()), self.title_entry.get(), sub_pages=pages_names,
+                        css=self.YesNo_variable.get(), headline=self.headline_entry.get(),
                         content=self.content_entry.get())
+            self.mainframe.destroy()
         except ValueError:
             WarningWindow(0)
 
@@ -158,6 +164,46 @@ class CSSWindow:
     def choose_color(self):
         self.color = cc.askcolor()[1]
         self.color_display.configure(background=self.color)
+
+
+class SubPagesWindow:
+    def __init__(self, root, pages):
+        self.root = root
+        self.pages = pages
+
+        self.root.geometry("600x600+100+100")
+        self.root.title("Simple-Website-Creator: Sub-Pages")
+        self.root.columnconfigure(0, weight=1)
+        self.root.rowconfigure(0, weight=1)
+
+        self.mainframe = ttk.Frame(self.root)
+        self.mainframe.grid(column=0, row=0, sticky="nesw")
+
+        for n in range(0, self.mainframe.grid_size()[0]):
+            self.mainframe.columnconfigure(n, weight=1)
+        for n in range(0, self.mainframe.grid_size()[1]):
+            self.mainframe.rowconfigure(n, weight=1)
+
+        self.gui_title = ttk.Label(self.mainframe, text="Please fill out the following to create your file.",
+                                   relief="solid", anchor="center", padding=5)
+        self.gui_title.grid(column=0, row=0, sticky="new", pady=10, padx=10, columnspan=3)
+        self.gui_title.grid_anchor("center")
+        self.placeholder = ttk.Label(self.mainframe, text="Placeholder, delete text and background", background="red")
+        self.placeholder.grid(column=0, row=1, columnspan=3, pady=5, sticky="n")
+
+        self.notebook = ttk.Notebook(self.mainframe)
+        self.tabs = []
+        for i in self.pages:
+            temp = ttk.Frame(self.notebook)
+            self.tabs.append(temp)
+            self.notebook.add(temp, text=i)
+        self.notebook.grid(column=0, row=2, columnspan=2, sticky="we", padx=10)
+
+        self.submit_button = ttk.Button(self.mainframe, text="Submit", command=self.invoke_scripts)
+        self.submit_button.grid(column=int(self.mainframe.grid_size()[0] / 2), row=self.mainframe.grid_size()[1] + 1)
+
+    def invoke_scripts(self):
+        pass
 
 
 class WarningWindow:
